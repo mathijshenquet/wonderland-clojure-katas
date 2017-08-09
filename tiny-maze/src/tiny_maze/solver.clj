@@ -45,10 +45,27 @@
    [1 0 0 1 0 1 1]
    [1 0 0 0 0 0 end]])
 
+(defn valid-move? [maze curr nxt]
+  (some #{nxt} (next-steps maze #{} curr)))
+
 (defn -main []
   (println "Welcome to Tiny Maze v0.1-beta")
   (println "")
-  (loop [maze level1 path [[0 0]]]
-    (render-solution maze path)
-    (print "> ")
-    (let [command (read-line)])))
+  (loop [maze level1 path #{[0 0]} pos [0 0]]
+    (dorun (map println (render-solution maze path)))
+    (let [command (read-line)
+          [x y] pos
+          nxt (case command 
+                  "a" [x (dec y)]    
+                  "d" [x (inc y)]
+                  "w" [(dec x) y]
+                  "s" [(inc x) y])
+          valid? (valid-move? maze pos nxt)]
+
+          (if valid? 
+            (if (= end (get-in maze nxt))
+              (println "Done!")
+              (recur maze (conj path nxt) nxt))
+            (do (println "You cant do that")
+                (recur maze path pos))
+          ))))
