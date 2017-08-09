@@ -26,7 +26,7 @@
   (if (= end (get-in maze pos))
     (into prevs [pos])
     (first (map #(find-path maze (into prevs [pos]) %)
-            (next-steps maze prevs pos)))))
+                (next-steps maze prevs pos)))))
 
 (defn render-solution
   [maze path]
@@ -38,3 +38,17 @@
   (let [start (find-start maze)]
     (render-solution maze
                      (find-path maze #{start} start))))
+
+(def level1
+  [[start 0 1 1 0 0 1]
+   [0 0 0 1 1 1 1]
+   [1 0 0 1 0 1 1]
+   [1 0 0 0 0 0 end]])
+
+(defn -main []
+  (println "Welcome to Tiny Maze v0.1-beta")
+  (println "")
+  (loop [maze level1 path [[0 0]]]
+    (render-solution maze path)
+    (print "> ")
+    (let [command (read-line)])))
